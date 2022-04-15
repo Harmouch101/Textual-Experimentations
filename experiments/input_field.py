@@ -8,6 +8,16 @@ from textual import events
 from textual.app import App
 from textual.reactive import Reactive
 from textual.widget import Widget
+from textual.widgets import Button
+from textual.widgets import Button, ButtonPressed
+
+
+class Submit(Button):
+
+    clicked: Reactive[RenderableType] = Reactive(False)
+
+    def on_click(self) -> None:
+        self.clicked = True
 
 
 class InputText(Widget):
@@ -57,13 +67,32 @@ class InputText(Widget):
 
 
 class MainApp(App):
-    async def on_load(self) -> None:
-        await self.bind("ctrl+c", "quit", "Quit")
+    submit: Reactive[RenderableType] = Reactive(False)
+    username: Reactive[RenderableType] = Reactive("")
+    password: Reactive[RenderableType] = Reactive("")
+
+    def handle_button_pressed(self, message: ButtonPressed) -> None:
+        """A message sent by the submit button"""
+        assert isinstance(message.sender, Button)
+        button_name = message.sender.name
+        self.submit = message.sender.clicked
+        if button_name == "submit" and self.submit:
+            self.submit_button.clicked = False
+            self.username = self.username_field.content
+            self.password = self.password_field.content
+            self.log(f"username = {self.username}")
 
     async def on_mount(self) -> None:
-        await self.view.dock(InputText("user_name"), edge="left", size=50)
-        await self.view.dock(InputText("password"), edge="left", size=50)
+        self.submit_button = Submit(
+            label="Submit", name="submit", style="black on white"
+        )
+        self.submit = self.submit_button.clicked
+        self.username_field = InputText("username")
+        self.password_field = InputText("password")
+        await self.view.dock(self.submit_button, edge="bottom", size=3)
+        await self.view.dock(self.username_field, edge="left", size=50)
+        await self.view.dock(self.password_field, edge="left", size=50)
 
 
 if __name__ == "__main__":
-    MainApp.run()
+    MainApp.run(log="textual.log")
