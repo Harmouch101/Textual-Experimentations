@@ -6,7 +6,9 @@ A collection of experiments conducted on Textual while writing articles on `my b
 Examples:
 ---------
 
-`Input field`_: A custom widget that simulates the concept of an input field.
+`input_field`_: A custom widget that simulates the concept of an input field.
+
+`input_fields_toggle`_: input fields with tab focus.
 
 .. image:: https://dev-to-uploads.s3.amazonaws.com/uploads/articles/umckob063979532d8d1s.png
    :target: https://github.com/Harmouch101/Textual-Experimentations
@@ -19,5 +21,6 @@ Examples:
    :alt: login screen
 
 .. _my blog: https://dev.to/wiseai
-.. _Input field: ./experiments/input_field.py
+.. _input_field: ./experiments/input_field.py
 .. _Login: ./experiments/login.py
+.. _input_fields_toggle: ./experiments/input_fields_toggle.py
